@@ -1,0 +1,1 @@
+fn main(){hold_my_notes_lib::run()}

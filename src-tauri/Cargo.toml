@@ -1,0 +1,24 @@
+[package]
+name="hold-my-notes"
+version="0.2.0"
+description="Animated desktop sticky notes for Windows"
+authors=["Hold My Notes"]
+edition="2021"
+rust-version="1.77.2"
+[lib]
+name="hold_my_notes_lib"
+crate-type=["staticlib","cdylib","rlib"]
+[build-dependencies]
+tauri-build={version="2.5",features=[]}
+[dependencies]
+tauri={version="2.10",features=["tray-icon"]}
+tauri-plugin-autostart="2.5"
+tauri-plugin-global-shortcut="2.3"
+tauri-plugin-single-instance="2.3"
+serde={version="1",features=["derive"]}
+serde_json="1"
+[target.'cfg(windows)'.dependencies]
+windows-sys={version="0.61",features=["Win32_Foundation","Win32_UI_WindowsAndMessaging"]}
+[features]
+default=["custom-protocol"]
+custom-protocol=["tauri/custom-protocol"]

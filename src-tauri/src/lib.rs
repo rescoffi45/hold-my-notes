@@ -35,7 +35,7 @@ fn seed_notes() -> Vec<Note> {
 }
 
 #[tauri::command]
-pub fn load_notes(app: AppHandle) -> Result<Vec<Note>, String> {
+fn load_notes(app: AppHandle) -> Result<Vec<Note>, String> {
     let p = notes_path(&app)?;
     if !p.exists() {
         let n = seed_notes();
@@ -52,7 +52,7 @@ pub fn load_notes(app: AppHandle) -> Result<Vec<Note>, String> {
 }
 
 #[tauri::command]
-pub fn save_notes(app: AppHandle, notes: Vec<Note>) -> Result<(), String> {
+fn save_notes(app: AppHandle, notes: Vec<Note>) -> Result<(), String> {
     let p = notes_path(&app)?;
     let t = p.with_extension("json.tmp");
     fs::write(&t, serde_json::to_vec_pretty(&notes).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
@@ -61,7 +61,7 @@ pub fn save_notes(app: AppHandle, notes: Vec<Note>) -> Result<(), String> {
 
 #[cfg(windows)]
 #[tauri::command]
-pub fn set_desktop_mode(app: AppHandle, label: String, enabled: bool) -> Result<(), String> {
+fn set_desktop_mode(app: AppHandle, label: String, enabled: bool) -> Result<(), String> {
     use windows_sys::Win32::UI::WindowsAndMessaging::{GetWindowLongPtrW, SetWindowLongPtrW, SetWindowPos, GWL_EXSTYLE, HWND_BOTTOM, HWND_TOP, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_SHOWWINDOW, WS_EX_TOOLWINDOW};
     let w = app.get_webview_window(&label).ok_or_else(|| "window not found".to_string())?;
     let h = w.hwnd().map_err(|e| e.to_string())?;
@@ -78,7 +78,7 @@ pub fn set_desktop_mode(app: AppHandle, label: String, enabled: bool) -> Result<
 
 #[cfg(not(windows))]
 #[tauri::command]
-pub fn set_desktop_mode(_app: AppHandle, _label: String, _enabled: bool) -> Result<(), String> { Ok(()) }
+fn set_desktop_mode(_app: AppHandle, _label: String, _enabled: bool) -> Result<(), String> { Ok(()) }
 
 fn show_dashboard(app: &AppHandle) {
     if let Some(w) = app.get_webview_window("main") {
